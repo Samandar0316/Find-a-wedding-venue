@@ -301,3 +301,22 @@ exports.getWeddingHallDetails = async (req, res) => {
     res.status(500).json({ error: 'Server xatosi' });
   }
 };
+
+exports.getOwners = async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT t.Owner_Id, o.Ism, o.Familiya, o.Phone,
+             array_agg(t.Nomi) AS wedding_halls
+      FROM Toyxona t
+      JOIN Owner o ON o.Owner_Id = t.Owner_Id
+      GROUP BY t.Owner_Id, o.Ism, o.Familiya, o.Phone
+      ORDER BY t.Owner_Id;
+    `;
+    const result = await pool.query(query);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server xatosi' });
+  }
+};

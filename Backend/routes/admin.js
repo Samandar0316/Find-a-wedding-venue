@@ -2,13 +2,31 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 
-router.post('/wedding-halls', adminController.addWeddingHall);
-router.put('/wedding-halls/:id/approve', adminController.approveWeddingHall);
+// Yangi to‘yxona qo‘shish
+router.post('/add-hall', adminController.addWeddingHall);
+
+// To‘yxonani tasdiqlash
+router.put('/approve-hall/:id', adminController.approveWeddingHall);
+
+// Barcha to‘yxonalarni ko‘rish
 router.get('/wedding-halls', adminController.getWeddingHalls);
-router.delete('/wedding-halls/:id', adminController.deleteWeddingHall);
-router.delete('/bookings/:id', adminController.cancelBooking);
+
+// To‘yxonani o‘chirish
+router.delete('/delete-hall/:id', adminController.deleteWeddingHall);
+
+// Bronni bekor qilish
+router.delete('/cancel-booking/:id', adminController.cancelBooking);
+
+// Barcha bronlarni ko‘rish
 router.get('/bookings', adminController.getBookings);
-router.put('/wedding-halls/:id', adminController.updateWeddingHall);
-router.get('/wedding-halls/:id', adminController.getWeddingHallDetails);
+
+// To‘yxona ma’lumotlarini o‘zgartirish
+router.put('/update-hall/:id', adminController.updateWeddingHall);
+
+// Yakka to‘yxona ma’lumotlarini ko‘rish
+router.get('/wedding-hall/:id', adminController.getWeddingHallDetails);
+
+// Barcha to‘yxona egalarini ko‘rish
+router.get('/owners', adminController.getOwners);
 
 module.exports = router;
