@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/upload');
+const ownerController = require('../controllers/ownerController');
 const adminController = require('../controllers/adminController');
 
 // Yangi to‘yxona qo‘shish
@@ -28,5 +30,12 @@ router.get('/wedding-hall/:id', adminController.getWeddingHallDetails);
 
 // Barcha to‘yxona egalarini ko‘rish
 router.get('/owners', adminController.getOwners);
+
+// Rasm(lar) bilan to‘yxona qo‘shish
+router.post(
+  '/register-hall',
+  upload.array('images', 5), // maksimal 5 ta rasm
+  ownerController.registerWeddingHall
+);
 
 module.exports = router;

@@ -77,7 +77,10 @@ exports.login = async (req, res) => {
 };
 // To’yxona ro‘yxatdan o‘tkazish (Owner tomonidan)
 exports.registerWeddingHall = async (req, res) => {
-  const { nomi, sigim, narx, telefon, rayon, address, owner_id, images } = req.body;
+  const { nomi, sigim, narx, telefon, rayon, address, owner_id } = req.body;
+
+  // Multer orqali kelgan fayllarni URL ko‘rinishiga o‘tkazamiz
+  const images = req.files?.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
 
   try {
     const query = `
@@ -234,4 +237,4 @@ exports.cancelOwnerBooking = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Server xatosi' });
   }
-};
+};  

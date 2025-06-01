@@ -220,4 +220,39 @@ const getWeddingHalls = async (req, res) => {
   }
 };
 
-module.exports = { bookWeddingHall, getUserBookings, getAvailableDates, getMyBookings, getWeddingHalls };
+const cancelUserBooking = async (req, res) => {
+  const { id } = req.params;
+  const { username, password } = req.body;
+
+  try {
+    const userQuery = 'SELECT * FROM Users WHERE Username = $1';
+    const userResult = await pool.query(userQuery, [username]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
+    }
+
+    const user = userResult.rows[0];
+    const isMatch = await bcrypt.compare(password, user.Password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Noto‘g‘ri parol' });
+    }
+
+    const deleteQuery = `
+      DELETE FROM Bronlar
+      WHERE Bron_Id = $1 AND User_Id = $2
+      RETURNING *;
+    `;
+    const result = await pool.query(deleteQuery, [id, user.User_Id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Bron topilmadi yoki sizga tegishli emas' });
+    }
+
+    res.json({ message: 'Bron muvaffaqiyatli bekor qilindi', data: result.rows[0] });
+  } catch (error) {
+    res.status(500).json({ error: 'Server xatosi: ' + error.message });
+  }
+};
+
+module.exports = { bookWeddingHall, getUserBookings, getAvailableDates, getMyBookings, getWeddingHalls, cancelUserBooking };

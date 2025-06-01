@@ -12,6 +12,7 @@ const port = process.env.PORT || 7777;
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/admin', adminRoutes);
